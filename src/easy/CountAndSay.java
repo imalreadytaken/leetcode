@@ -30,14 +30,19 @@ import java.util.stream.Collectors;
 public class CountAndSay {
 
     private StringBuilder result;
-    private ArrayList<String> strs = new ArrayList<>();
+    private static ArrayList<String> strs = new ArrayList<>();
+
+    static {
+        strs.add("1");
+    }
 
     public String countAndSay(int n) {
+        if (n <= 0) return "";
         if (strs.size() >= n) return strs.get(n-1);
-        String current = strs.get(strs.size() - 1);
-        char tmp = current.charAt(0);
-        int times = 1;
         while (strs.size() < n){
+            String current = strs.get(strs.size() - 1);
+            char tmp = current.charAt(0);
+            int times = 1;
             result = new StringBuilder();
             for (int i = 1; i < current.length(); i++) {
                 if (tmp == current.charAt(i)) times++;
@@ -48,9 +53,18 @@ public class CountAndSay {
                     times = 1;
                 }
             }
+            result.append(times);
+            result.append(tmp);
             strs.add(result.toString());
         }
-        return result.toString();
+        return strs.get(n-1);
+    }
+
+    public static void main(String[] args) {
+        CountAndSay c = new CountAndSay();
+        for (int i = 0; i < 10; i++) {
+            System.out.println(c.countAndSay(i));
+        }
     }
 
 }
