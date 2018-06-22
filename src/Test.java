@@ -9,6 +9,7 @@ public class Test {
      * @param args stete
      */
     public static void main(String[] args) {
+        // jin tian meiyou shijian daka
         List<List<Integer>> mul = new ArrayList<>();
         List<Integer> l = new ArrayList<Integer>();
         l.add(0);
