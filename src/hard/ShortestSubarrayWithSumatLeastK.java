@@ -1,5 +1,6 @@
 package hard;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
 
@@ -25,50 +26,63 @@ import java.util.Map;
  */
 public class ShortestSubarrayWithSumatLeastK {
 
-    //  timeout
     public int shortestSubarray(int[] A, int K) {
-        int start = 0, sum = 0, shortest = A.length + 1, tmpSum, _start;
-        while (A[start] <= 0) start++;
-        int end = start;
-        while (end < A.length) {
-            sum += A[end++];
-            if (sum <= 0) {
-                while (end < A.length && A[end] <= 0)
-                    end++;
-                start = end;
-                sum = 0;
-            }
-            else if (sum >= K) {
-                sum = 0;
-                start = end;
-                while ( (sum += A[--start]) < K);
-                shortest = Math.min(shortest, end - start);
-                if (shortest == 1) return shortest;
-                sum -= A[start++];
-                tmpSum = 0;
-                _start = start;
-                while (_start < end && _start < A.length){
-                    tmpSum += A[_start];
-                    _start++;
-                    if (tmpSum <= 0){
-                        sum -= tmpSum;
-                        start = _start;
-                    }
-                }
-
-            }
+        int N = A.length, res = N + 1;
+        int[] B = new int[N + 1];
+        for (int i = 0; i < N; i++) B[i + 1] += B[i] + A[i];
+        Deque<Integer> d = new ArrayDeque<>();
+        for (int i = 0; i < N + 1; i++) {
+            while (d.size() > 0 && B[d.getFirst()] <= B[i] - K)
+                res = Math.min(res, i - d.pollFirst());
+            while (d.size() > 0 && B[i] <= B[d.getLast()]) d.pollLast();
+            d.addLast(i);
         }
-        return shortest > A.length ? -1 : shortest;
+        return res <= N ? res : -1;
     }
+
+    //  timeout
+//    public int shortestSubarray(int[] A, int K) {
+//        int start = 0, sum = 0, shortest = A.length + 1, tmpSum, _start;
+//        while (A[start] <= 0) start++;
+//        int end = start;
+//        while (end < A.length) {
+//            sum += A[end++];
+//            if (sum <= 0) {
+//                while (end < A.length && A[end] <= 0)
+//                    end++;
+//                start = end;
+//                sum = 0;
+//            }
+//            else if (sum >= K) {
+//                sum = 0;
+//                start = end;
+//                while ( (sum += A[--start]) < K);
+//                shortest = Math.min(shortest, end - start);
+//                if (shortest == 1) return shortest;
+//                sum -= A[start++];
+//                tmpSum = 0;
+//                _start = start;
+//                while (_start < end && _start < A.length){
+//                    tmpSum += A[_start];
+//                    _start++;
+//                    if (tmpSum <= 0){
+//                        sum -= tmpSum;
+//                        start = _start;
+//                    }
+//                }
+//
+//            }
+//        }
+//        return shortest > A.length ? -1 : shortest;
+//    }
 
     public static void main(String[] args) {
         // ([77,19,35,10,-14]&19)
         // [39353,64606,-23508,5678,-17612,40217,15351,-12613,-37037,64183,68965,-19778,-41764,-21512,17700,-23100,77370,64076,53385,30915,18025,17577,10658,77805,56466,-2947,29423,50001,31803,9888,71251,-6466,77254,-30515,2903,76974,-49661,-10089,66626,-7065,-46652,84755,-37843,-5067,67963,92475,15340,15212,54320,-5286] 207007
-        int[] A = {39353,64606,-23508,5678,-17612,40217,15351,-12613,-37037,64183,68965,-19778,-41764,-21512,17700,-23100,77370,64076,53385,30915,18025,17577,10658,77805,56466,-2947,29423,50001,31803,9888,71251,-6466,77254,-30515,2903,76974,-49661,-10089,66626,-7065,-46652,84755,-37843,-5067,67963,92475,15340,15212,54320,-5286};
-        int K = 207007;
+        int[] A = {2,-1,2};
+        int K = 3;
         ShortestSubarrayWithSumatLeastK s = new ShortestSubarrayWithSumatLeastK();
         System.out.println(s.shortestSubarray(A, K));
-        System.out.println(Math.pow(10,5));
     }
 
     //time out
