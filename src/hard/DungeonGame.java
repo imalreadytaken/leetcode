@@ -1,6 +1,7 @@
 package hard;
 
 /**
+ * 注意，从后向前计算时，如果所需生命值小于1，应该将其设为1，这样才能保证所有时刻生命值都是大于0的
  * The demons had captured the princess (P) and imprisoned her in the bottom-right corner of a dungeon. The dungeon consists of M x N rooms laid out in a 2D grid. Our valiant knight (K) was initially positioned in the top-left room and must fight his way through the dungeon to rescue the princess.
  *
  * The knight has an initial health point represented by a positive integer. If at any point his health point drops to 0 or below, he dies immediately.
@@ -30,27 +31,25 @@ public class DungeonGame {
         int m = dungeon.length;
         int n = dungeon[0].length;
         int[][] lowest = new int[m][n];
-        lowest[0][0] = dungeon[0][0];
-        for (int i = 0; i < m; i++) {
-            dungeon[i][0] += dungeon[i-1][0];
-            lowest[i][0] = Math.min(lowest[i-1][0], dungeon[i][0]);
+        lowest[m-1][n-1] = Math.max(1,1-dungeon[m-1][n-1]);
+        for (int i = m-2; i >= 0; i--) {
+            lowest[i][n-1] = Math.max(1,lowest[i+1][n-1]-dungeon[i][n-1]);
         }
-        for (int i = 0; i < n; i++) {
-            dungeon[0][i] += dungeon[0][i-1];
-            lowest[0][i] = Math.min(lowest[0][i-1], dungeon[0][i]);
+        for (int i = n-2; i >= 0; i--) {
+            lowest[m-1][i] = Math.max(1, lowest[m-1][i+1] - dungeon[m-1][i]);
         }
-        for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n; j++) {
-                int up = dungeon[i-1][j] + dungeon[i][j];
-                int left = dungeon[i][j-1] + dungeon[i][j];
-                if (up>left){
-                    if (up < lowest[i-1][j] && up < lowest[i][j-1]){
-                        lowest[i][j] = up;
-                        dungeon[i][j] = up;
-                    }
-                }
+        for (int i = m-2; i >= 0; i--) {
+            for (int j = n-2; j >= 0; j--) {
+                int down = Math.max(1, lowest[i+1][j] - dungeon[i][j]);
+                int right = Math.max(1, lowest[i][j+1] - dungeon[i][j]);
+                lowest[i][j] = Math.min(down, right);
             }
         }
-        return dungeon[0][0] < 0 ? -dungeon[0][0] : 1;
+        return lowest[0][0];
+    }
+
+    public static void main(String[] args) {
+        int[][] m = {{1,-2,3},{2,-2,-2}};
+        System.out.println(new DungeonGame().calculateMinimumHP(m));
     }
 }
