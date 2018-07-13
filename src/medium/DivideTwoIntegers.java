@@ -1,6 +1,7 @@
 package medium;
 
 /**
+ * 先把两个数字转换成long型的防止溢出，然后根据移位做差循环增加商，得到最后的商
  * Given two integers dividend and divisor, divide two integers without using multiplication, division and mod operator.
  *
  * Return the quotient after dividing dividend by divisor.
