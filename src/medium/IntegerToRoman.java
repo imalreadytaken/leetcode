@@ -51,13 +51,18 @@ public class IntegerToRoman {
     public String intToRoman(int num) {
         StringBuilder s = new StringBuilder();
         int i = 0;
-        while (i < nums.length){
-            while (num >= nums[i]){
-                s.append(romans[i]);
-                num -= nums[i];
+            while (num > 0 && i < nums.length){
+    //            while (num >= nums[i]){
+    //                s.append(romans[i]);
+    //                num -= nums[i];
+    //            }
+                int j = num / nums[i];
+                for (int k = 0; k < j; k++) {
+                    s.append(romans[i]);
+                }
+                num %= nums[i];
+                i++;
             }
-            i++;
-        }
         return s.toString();
     }
 }
