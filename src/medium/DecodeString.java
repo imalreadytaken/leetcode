@@ -23,43 +23,38 @@ public class DecodeString {
         if (s.equals("")) return "";
         Stack<String> strs = new Stack<>();
         Stack<Integer> ints = new Stack<>();
-        String tmp;
-        int last = 0;
+        int i = 0;
         char c;
-        for (int i = 0; i < s.length(); i++) {
+        String tmp;
+        int j;
+        while (i < s.length()){
             c = s.charAt(i);
             if (c == '[') {
-                ints.push(Integer.valueOf(s.substring(last, i)));
-                strs.push("");
-                last = i + 1;
-            }
-            else if (c == ']'){
-                if (s.charAt(i-1) != '[') {
-                    if (last == i) {
-                        tmp = getRepeatString(strs.pop(), ints.pop());
-                    }
-                    else {
-                        tmp = getRepeatString(s.substring(last, i), ints.pop());
-                        if (strs.peek().equals("")) strs.pop();
-                        while ( strs.size() > 0 && !strs.peek().equals("") ) tmp = strs.pop() + tmp;
-                    }
-                    strs.pop();
-                    strs.push((strs.size() > 0 && strs.peek() != "" ? strs.pop() : "") + tmp);
-                }
-                last = i + 1;
+                strs.push("") ;
             }
             else if (c >= '0' && c <= '9'){
-                if (i == 0 ) continue;
-                if (s.charAt(i - 1) < '0' || s.charAt(i - 1) > '9'){
-                    if (s.charAt(i - 1) != '[' && s.charAt(i - 1) != ']'){
-                        strs.push(s.substring(last, i));
-                    }
-                    last = i;
-                }
+                j = 1;
+                while (i+j < s.length() && s.charAt(i+j) >= '0' && s.charAt(i+j) <= '9') j++;
+                ints.push( Integer.valueOf(s.substring(i, i+j)) );
+                i += j;
+                continue;
+            }else if (c == ']'){
+                tmp = "";
+                while (!strs.peek().equals("")) tmp = strs.pop() + tmp;
+                if (strs.size() > 0) strs.pop();
+                strs.push(getRepeatString(tmp, ints.pop()));
+            }else {
+                j = 1;
+                while (i+j < s.length() && s.charAt(i+j) != '[' && s.charAt(i+j) != ']' && s.charAt(i+j) < '0' && s.charAt(i+j) > '9') j++;
+                strs.push(s.substring(i, i+ j));
+                i += j;
+                continue;
             }
+            i++;
         }
-        if (last < s.length()) strs.push( (strs.size() > 0 ? strs.pop() : "") + s.substring(last));
-        return strs.pop();
+        tmp = "";
+        while (strs.size() > 0) tmp = strs.pop() + tmp;
+        return tmp;
     }
 
 
@@ -70,7 +65,11 @@ public class DecodeString {
     }
 
     public static void main(String[] args) {
-        System.out.println(new DecodeString().decodeString("3[a]2[b4[F]c]"));
+        String[] ss = {"3[a]2[b4[F]c]","3[a]2[bc]", "3[a2[c]]","2[abc]3[cd]ef",};
+        DecodeString d = new DecodeString();
+        for (String s:ss) {
+            System.out.println(d.decodeString(s));
+        }
     }
 
 }
