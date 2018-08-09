@@ -1,5 +1,6 @@
 package medium;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,12 +28,35 @@ import java.util.List;
  */
 public class UniqueBinarySearchTreesII {
 
-//    private List<TreeNode> generateTree(int start, int end){
-//        if (start == end) return new TreeNode(start);
-//    }
+    private List[][] tmp;
+
+    private List<TreeNode> generateTree(int start, int end){
+        if (tmp[start][end] != null) return tmp[start][end];
+        List<TreeNode> res = new ArrayList<>();
+        if (start == end) res.add(new TreeNode(start));
+        else if (start > end) res.add(null);
+        else {
+            for (int i = start; i <= end; i++) {
+                List<TreeNode> left = generateTree(start, i - 1);
+                List<TreeNode> right = generateTree(i + 1, end);
+                for (TreeNode aleft : left) {
+                    for (TreeNode aright : right) {
+                        TreeNode root = new TreeNode(i);
+                        root.left = aleft;
+                        root.right = aright;
+                        res.add(root);
+                    }
+                }
+            }
+        }
+        tmp[start][end] = res;
+        return res;
+    }
 
     public List<TreeNode> generateTrees(int n) {
-        return null;
+        if (n <= 0) return new ArrayList<>();
+        tmp = new List[n + 2][n + 2];
+        return generateTree(1, n);
     }
 
 
@@ -42,6 +66,11 @@ public class UniqueBinarySearchTreesII {
         TreeNode left;
         TreeNode right;
         TreeNode(int x) { val = x; }
+    }
+
+    public static void main(String[] args) {
+        Object t = new UniqueBinarySearchTreesII().generateTrees(3);
+        System.out.println(t);
     }
 
 }
