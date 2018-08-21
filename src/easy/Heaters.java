@@ -3,6 +3,8 @@ package easy;
 import java.util.Arrays;
 
 /**
+ * 1、房子和暖气都排序。适用于暖气房子个数差不多的情况
+ * 2、只排暖气，然后用二分查找遍历房子。适用于暖气较少，房子较多的情况。
  * Winter is coming! Your first job during the contest is to design a standard heater with fixed warm radius to warm all the houses.
  *
  * Now, you are given positions of houses and heaters on a horizontal line, find out minimum radius of heaters so that all houses could be covered by those heaters.
