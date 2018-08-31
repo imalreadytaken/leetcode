@@ -18,20 +18,13 @@ package easy;
  */
 public class CanPlaceFlowers {
     public boolean canPlaceFlowers(int[] flowerbed, int n) {
+        if (flowerbed.length == 1) return n <= 0 || (flowerbed[0] == 0 && n <= 1);
         if (n > (flowerbed.length + 1) / 2) return false;
-        int place = 0, i = 0;
-        if (flowerbed[i] == 1) {
-            i++;
-        }
-        else if (flowerbed[i] == 0 && flowerbed[i+1] == 0) {
-            flowerbed[i] = 1;
-            place++;
-        }
-        i++;
-        for (; i < flowerbed.length - 1; i++) {
+        int place = 0;
+        for (int i = 0; i < flowerbed.length - 1; i++) {
             if (flowerbed[i] == 1) i++;
             else if (flowerbed[i] == 0 && flowerbed[i+1] == 0) {
-                flowerbed[i] = 1;
+                flowerbed[i++] = 1;
                 place++;
             }
         }
@@ -40,4 +33,11 @@ public class CanPlaceFlowers {
         }
         return place >= n;
     }
+
+    public static void main(String[] args) {
+        int[] a = {1};
+        int n = 0;
+        System.out.println(new CanPlaceFlowers().canPlaceFlowers(a, n));
+    }
+
 }
