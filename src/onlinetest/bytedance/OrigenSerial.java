@@ -9,7 +9,7 @@ public class OrigenSerial {
         int n = s.nextInt();
         int[] res = new int[n];
         for (int i = 0; i < n; i++) {
-            res[i] = s.nextInt();
+            res[i] = s.nextInt(); 
         }
         int r = 1;
         while (n-- > 0){
